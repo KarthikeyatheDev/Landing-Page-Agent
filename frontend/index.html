@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hyper-Personalized Landing Page</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f8fa;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .input-group {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    }
+    input {
+      flex: 1;
+      min-width: 150px; /* Ensure inputs don't get too small */
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      padding: 0.7rem 1.5rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      flex-shrink: 0; /* Prevent button from shrinking */
+    }
+    .section {
+      margin-top: 2rem;
+    }
+    .hero {
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      color: white;
+      padding: 2.2rem 1.5rem 2.2rem 1.5rem;
+      border-radius: 16px;
+      font-size: 2rem;
+      text-align: center;
+      box-shadow: 0 6px 24px rgba(79, 172, 254, 0.15);
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 50%;
+      z-index: 0;
+    }
+    .carousel {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .product {
+      background: linear-gradient(135deg, #f8fffe 60%, #e0f7fa 100%);
+      padding: 1.2rem 1rem;
+      border-radius: 14px;
+      flex: 1 1 calc(28% - 1rem);
+      box-sizing: border-box;
+      text-align: center;
+      min-width: 140px;
+      box-shadow: 0 2px 10px rgba(44, 62, 80, 0.07);
+      border: 1.5px solid #b2ebf2;
+      transition: transform 0.18s, box-shadow 0.18s;
+      cursor: pointer;
+      position: relative;
+    }
+    .product:hover {
+      transform: translateY(-6px) scale(1.04);
+      box-shadow: 0 8px 24px rgba(44, 62, 80, 0.13);
+      border-color: #4facfe;
+    }
+    .product strong {
+      color: #3498db;
+      font-size: 1.1rem;
+    }
+    .product::after {
+      content: "🛒";
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-size: 1.2rem;
+      opacity: 0.18;
+    }
+    .cta {
+      text-align: center;
+      margin-top: 2.5rem;
+    }
+    .cta button {
+      font-size: 1.15rem;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(90deg, #2ecc71, #27ae60);
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(46, 204, 113, 0.13);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cta button:hover {
+      background: linear-gradient(90deg, #27ae60, #2ecc71);
+      transform: scale(1.06);
+    }
+    .info-display {
+      margin-top: 1rem;
+      padding: 1.1rem 1rem;
+      background: linear-gradient(90deg, #e0f7fa 80%, #f8fffe 100%);
+      border-radius: 10px;
+      border: 1.5px solid #b2ebf2;
+      font-size: 1rem;
+      color: #00796b;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07);
+    }
+    .info-display p {
+      margin: 0.3rem 0;
+      font-size: 1.01em;
+    }
+    .input-group input:focus {
+      outline: 2px solid #4facfe;
+      border-color: #4facfe;
+      background: #f0faff;
+    }
+    .input-group button:focus {
+      outline: 2px solid #2ecc71;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 0.7rem;
+      }
+      .hero {
+        font-size: 1.1rem;
+        padding: 1rem 0.5rem;
+      }
+      .product {
+        min-width: 90px;
+        padding: 0.7rem 0.3rem;
+      }
+      .cta button {
+        font-size: 1rem;
+        padding: 0.7rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🛍️ Hyper-Personalized Landing Page</h1>
+    <div class="input-group">
+      <input type="text" id="city" placeholder="Enter your city (e.g., Mumbai)" value="Mumbai" />
+      <input type="text" id="device" placeholder="Device (e.g., mobile)" value="mobile" />
+      <input type="text" id="source" placeholder="Traffic source (e.g., facebook)" value="facebook" />
+      <input type="text" id="userId" placeholder="User ID (optional, e.g., user123)" />
+      <button onclick="generatePage()">Generate</button>
+    </div>
+
+    <div class="section" id="landingPage" style="display: none;">
+      <div class="hero" id="heroBanner">Loading...</div>
+      <div class="carousel" id="carouselContainer"></div>
+      <div class="cta">
+        <button id="ctaBtn"><span style="font-size:1.2em;">✨</span> CTA</button>
+      </div>
+      <div class="info-display" id="userInfo">
+        <p><strong>User Segment:</strong> <span id="userSegment">N/A</span></p>
+        <p><strong>Behavioral Tag:</strong> <span id="behavioralTag">N/A</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Add a loading spinner
+    function showSpinner(show) {
+      let spinner = document.getElementById("spinner");
+      if (!spinner) {
+        spinner = document.createElement("div");
+        spinner.id = "spinner";
+        spinner.innerHTML = `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`;
+        spinner.style.position = "fixed";
+        spinner.style.top = "0";
+        spinner.style.left = "0";
+        spinner.style.width = "100vw";
+        spinner.style.height = "100vh";
+        spinner.style.background = "rgba(255,255,255,0.7)";
+        spinner.style.display = "flex";
+        spinner.style.alignItems = "center";
+        spinner.style.justifyContent = "center";
+        spinner.style.zIndex = "9999";
+        document.body.appendChild(spinner);
+      }
+      spinner.style.display = show ? "flex" : "none";
+    }
+
+    async function generatePage() {
+      const city = document.getElementById("city").value;
+      const device = document.getElementById("device").value;
+      const source = document.getElementById("source").value;
+      const userId = document.getElementById("userId").value;
+
+      showSpinner(true);
+      try {
+        const response = await fetch("http://127.0.0.1:5000/generate-landing", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ city, device, source, user_id: userId })
+        });
+
+        if (!response.ok) {
+          throw new Error("Server error: " + response.status);
+        }
+
+        const data = await response.json();
+
+        document.getElementById("landingPage").style.display = "block";
+        document.getElementById("heroBanner").innerHTML = `<span style='font-size:2rem;'>🏷️</span> ` + data.hero_banner;
+
+        const carousel = document.getElementById("carouselContainer");
+        carousel.innerHTML = "";
+        if (data.product_carousel && data.product_carousel.length > 0) {
+          data.product_carousel.forEach((item, idx) => {
+            const div = document.createElement("div");
+            div.className = "product";
+            div.innerHTML = `<strong>Product ${idx+1}</strong><br><span style='font-size:1.1rem;'>${item}</span>`;
+            carousel.appendChild(div);
+          });
+        } else {
+          carousel.innerHTML = "<p>No products found for these criteria.</p>";
+        }
+
+        const ctaBtn = document.getElementById("ctaBtn");
+        ctaBtn.innerText = data.CTA;
+        ctaBtn.onclick = function() {
+          alert("Thank you for your interest! This is a demo CTA.");
+        };
+
+        // Display user segment and behavioral tag
+        document.getElementById("userSegment").innerText = data.user_segment !== null ? data.user_segment : 'N/A';
+        document.getElementById("behavioralTag").innerText = data.behavioral_tag || 'N/A';
+
+        // Show logic summary for demo clarity
+        let logicSummary = document.getElementById("logicSummary");
+        if (!logicSummary) {
+          logicSummary = document.createElement("div");
+          logicSummary.id = "logicSummary";
+          logicSummary.className = "info-display";
+          logicSummary.style.marginTop = "1.5rem";
+          document.querySelector(".container").appendChild(logicSummary);
+        }
+        logicSummary.innerHTML = `<strong>Personalization Logic:</strong><br>
+          <ul style='margin:0.5rem 0 0 1.2rem;'>
+            <li><b>City:</b> ${city || 'N/A'}</li>
+            <li><b>Device:</b> ${device || 'N/A'}</li>
+            <li><b>Source:</b> ${source || 'N/A'}</li>
+            <li><b>User ID:</b> ${userId || 'N/A'}</li>
+            <li><b>Segment:</b> ${data.user_segment !== null ? data.user_segment : 'N/A'}</li>
+            <li><b>Behavioral Tag:</b> ${data.behavioral_tag || 'N/A'}</li>
+          </ul>
+          <span style='font-size:0.95em;color:#555;'>
+            <b>Note:</b> Recommendations are based on clustering, engagement, and fallback logic for cold start users.
+          </span>`;
+      } catch (error) {
+        alert("Failed to generate landing page: " + error.message);
+        document.getElementById("landingPage").style.display = "none";
+      } finally {
+        showSpinner(false);
+      }
+    }
+
+    // Add spinner CSS
+    (function(){
+      const style = document.createElement('style');
+      style.innerHTML = `.lds-ring { display: inline-block; position: relative; width: 80px; height: 80px; }
+      .lds-ring div { box-sizing: border-box; display: block; position: absolute; width: 64px; height: 64px; margin: 8px; border: 8px solid #3498db; border-radius: 50%; animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; border-color: #3498db transparent transparent transparent; }
+      .lds-ring div:nth-child(1) { animation-delay: -0.45s; }
+      .lds-ring div:nth-child(2) { animation-delay: -0.3s; }
+      .lds-ring div:nth-child(3) { animation-delay: -0.15s; }
+      @keyframes lds-ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
+      document.head.appendChild(style);
+    })();
+  </script>
+</body>
+</html>
