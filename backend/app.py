@@ -117,25 +117,27 @@ merged_data['behavioral_tag'] = merged_data.apply(get_behavioral_tag, axis=1)
 def cold_start_recommendation(city, device, source):
     filter_data = merged_data.copy()
 
-    if city in filter_data['city'].dropna().unique():
-        filter_data = filter_data[filter_data['city'] == city]
+    # Try to match city, device, and source if present
+    if 'city' in filter_data.columns and city:
+        filter_data = filter_data[filter_data['city'].str.lower() == city.lower()]
 
-    if device in filter_data['category'].dropna().unique():
-        filter_data = filter_data[filter_data['category'] == device]
+    # Device logic: try to match both 'device' and 'category' columns
+    for dcol in [col for col in filter_data.columns if col.lower() in ['device', 'category']]:
+        if device:
+            filter_data = filter_data[filter_data[dcol].astype(str).str.lower() == device.lower()]
 
-    if source in filter_data['source'].dropna().unique():
-        filter_data = filter_data[filter_data['source'] == source]
+    if 'source' in filter_data.columns and source:
+        filter_data = filter_data[filter_data['source'].astype(str).str.lower() == source.lower()]
 
-    if 'itemcategory' in filter_data.columns:
-        grouped = filter_data.groupby('itemcategory').size().reset_index(name='count')
-        top_items = grouped.sort_values('count', ascending=False).head(5)
-        return top_items['itemcategory'].tolist()
+    # Try to get top categories from all possible columns
+    for col in ['itemcategory', 'item_category', 'ItemCategory', 'category', 'Category']:
+        if col in filter_data.columns:
+            grouped = filter_data.groupby(col).size().reset_index(name='count')
+            top_items = grouped.sort_values('count', ascending=False).head(5)
+            if not top_items.empty:
+                return top_items[col].astype(str).tolist()
 
-    if 'itemcategory' not in filter_data.columns and 'item_category' in filter_data.columns:
-        grouped = filter_data.groupby('item_category').size().reset_index(name='count')
-        top_items = grouped.sort_values('count', ascending=False).head(5)
-        return top_items['item_category'].tolist()
-
+    # Fallback: return demo list
     return ["Accessories", "Apparel", "Footwear"]
 
 
@@ -240,3 +242,4 @@ def generate_landing():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
